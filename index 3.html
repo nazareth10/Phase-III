@@ -1,0 +1,53 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shadow Console</title>
+    <style>
+        body { background: black; color: lime; font-family: monospace; padding: 20px; }
+        #console { height: 300px; overflow-y: auto; border: 1px solid lime; padding: 10px; margin-bottom: 10px; }
+        input { width: 100%; padding: 10px; background: #111; color: lime; border: 1px solid lime; }
+    </style>
+</head>
+<body>
+    <h1>Shadow Console</h1>
+    <div id="console"></div>
+    <input id="commandInput" placeholder="Type your command and press Enter" autofocus />
+
+    <script>
+        const consoleDiv = document.getElementById('console');
+        const input = document.getElementById('commandInput');
+
+        input.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const cmd = input.value.trim();
+                if (!cmd) return;
+                consoleDiv.innerHTML += `<div>> ${cmd}</div>`;
+                input.value = '';
+                simulateShadow(cmd);
+            }
+        });
+
+        function simulateShadow(command) {
+            let response = "Command not recognized.";
+            if (command.startsWith("/create_ebook")) {
+                response = "EBook created: '" + command.split('"')[1] + "'";
+            } else if (command.startsWith("/publish_ebook")) {
+                response = "EBook published. Links available (PDF, HTML, TXT).";
+            } else if (command.startsWith("/log_sale")) {
+                const parts = command.split('"');
+                if (parts.length >= 3) {
+                    response = `Sale logged: ${parts[1]} for €${parts[2].trim()}`;
+                } else {
+                    response = "Sale logging failed. Use: /log_sale "Title" amount";
+                }
+            } else if (command === "/memory") {
+                response = "Memory recalled: last 3 commands simulated.";
+            }
+            consoleDiv.innerHTML += `<div>${response}</div>`;
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        }
+    </script>
+</body>
+</html>
